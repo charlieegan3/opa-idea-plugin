@@ -28,9 +28,12 @@ class RegalSemanticTokensColorsProvider : SemanticTokensColorsProvider {
         "namespace" -> DefaultLanguageHighlighterColors.STRING
         "variable" -> when {
             tokenModifiers.contains("declaration") -> DefaultLanguageHighlighterColors.CONSTANT
+            tokenModifiers.contains("definition")  -> DefaultLanguageHighlighterColors.CONSTANT
             tokenModifiers.contains("reference")   -> DefaultLanguageHighlighterColors.CONSTANT
             else -> null
         }
+        "import"  -> DefaultLanguageHighlighterColors.INSTANCE_METHOD
+        "keyword" -> DefaultLanguageHighlighterColors.KEYWORD
         else -> null
     }
 }
