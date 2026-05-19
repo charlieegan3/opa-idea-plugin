@@ -1,5 +1,15 @@
 # Release notes for NEXT_VERSION
 
+# Release notes for v0.17.0
+
+## Changes by Kind
+
+### Feature
+
+- LSP4IJ: Update semantic tokens color mapping to support new token types ([#197](https://github.com/open-policy-agent/opa-idea-plugin/pull/197), [@SeanLedford](https://github.com/SeanLedford))
+- LSP4IJ: Add support for Syntax Highlighting via LSP4IJ's Color Mapping Interface ([#195](https://github.com/open-policy-agent/opa-idea-plugin/pull/195), [@SeanLedford](https://github.com/SeanLedford))
+- LSP4IJ: Add support for Regal language server ([#190](https://github.com/open-policy-agent/opa-idea-plugin/pull/190), [@charlieegan3](https://github.com/charlieegan3))
+
 # Release notes for v0.16.0
 
 ## Changes by Kind
