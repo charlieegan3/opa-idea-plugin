@@ -3,6 +3,7 @@
  * found in the LICENSE file.
  */
 
+import org.gradle.api.tasks.bundling.AbstractArchiveTask
 import org.intellij.markdown.ast.getTextInNode
 import org.jetbrains.grammarkit.tasks.GenerateLexerTask
 import org.jetbrains.grammarkit.tasks.GenerateParserTask
@@ -49,6 +50,13 @@ plugins {
 allprojects {
     apply {
         plugin("idea")
+    }
+}
+
+// The agent runs as a -javaagent in the user's test JVM, not in the IDE, so it is plain Java with no
+// Kotlin or IntelliJ platform dependencies. It has its own build file.
+configure(allprojects.filter { it.name != "opa-ir-coverage-agent" }) {
+    apply {
         plugin("kotlin")
         plugin("org.jetbrains.grammarkit")
         plugin("org.jetbrains.intellij.platform.module")
@@ -89,6 +97,8 @@ allprojects {
                 bundledPlugin("com.intellij.java")
             }
             bundledPlugin("com.intellij.modules.json")
+            bundledPlugin("Coverage")
+            bundledPlugin("com.intellij.gradle")
             pluginVerifier()
             testFramework(TestFrameworkType.Platform)
         }
@@ -148,7 +158,7 @@ project(":plugin") {
 
             ideaVersion {
                 sinceBuild = providers.gradleProperty("sinceBuild")
-                untilBuild = providers.gradleProperty("untilBuild")
+                untilBuild = provider { null }
             }
             changeNotes = getLastReleaseNotes()
         }
@@ -190,6 +200,8 @@ project(":") {
 
     dependencies {
         testOutput(sourceSets.getByName("test").output.classesDirs)
+
+        implementation("com.google.code.gson:gson:2.11.0")
     }
 
     val generateRegoLexer = tasks.register<GenerateLexerTask>("generateRegoLexer") {
@@ -222,6 +234,15 @@ project(":") {
             // prevents Kotlin from generating bridge stubs for interface default methods,
             // which the plugin verifier flags as deprecated API overrides
             freeCompilerArgs.add("-jvm-default=no-compatibility")
+        }
+    }
+
+    // Ship the agent jar as agent/opa-ir-coverage-agent.jar so OpaIrAgentExtractor can unpack it at
+    // runtime and pass the path to -javaagent.
+    tasks.named<ProcessResources>("processResources") {
+        dependsOn(":opa-ir-coverage-agent:shadowJar")
+        from(project(":opa-ir-coverage-agent").tasks.named("shadowJar").map { (it as AbstractArchiveTask).outputs.files }) {
+            into("agent")
         }
     }
 }

@@ -12,6 +12,10 @@ deps
 # MacOS files
 .DS_Store
 
+# IR coverage plan bundles built from the fixture policy under
+# src/test/resources/org/openpolicyagent/ideaplugin/ide/coverage/fixtures/rego
+bundle.tar.gz
+
 # release-notes file
 next-release-notes.md
 tmp_changelog.md

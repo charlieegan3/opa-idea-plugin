@@ -7,5 +7,6 @@ rootProject.name = "opa-idea-plugin"
 
 include(
     "plugin",
-    "idea"
+    "idea",
+    "opa-ir-coverage-agent"
 )
